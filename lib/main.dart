@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 import 'services/notification_service.dart';
+import 'services/auth_state.dart';
 
 // hold sesi global. Tukar email di bawah untuk menguji jabatan berbeza!
 String currentLoggedInUserEmail = "syaza@gmail.com";
@@ -10,6 +11,7 @@ List<dynamic> senaraiVendorGlobalJabatanSyafiqah = [];
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.init(); //  AKTIFKAN LOCENG PHONE!
+  await AuthState.instance.restore(); // resume session before the first route guard check
   runApp(const RushApp());
 }
 

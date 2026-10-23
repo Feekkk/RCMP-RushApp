@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
+import '../services/auth_state.dart';
 
 /// Interface 3: "Help Desk System — Welcome Back / User Login" screen.
 class UserLoginScreen extends StatefulWidget {
@@ -53,6 +54,12 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                 .toLowerCase();
 
             // 2.  terus kekalkan masuk ke fail  /complaint/fill
+            await AuthState.instance.login(
+              role: UserRole.student,
+              email: emelDariDB,
+              fullName: namaDariDB,
+            );
+            if (!mounted) return;
             context.pushReplacement('/complaint/fill',
               extra: {
                 'nama_user': namaDariDB,

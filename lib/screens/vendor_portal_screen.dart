@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
+import '../services/auth_state.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -78,6 +79,16 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
           // baharu boleh mengesan dengan tepat sama ada 1 (baru) atau 0 (kali kedua).
           // =========================================================================
           vendorProfile['first_login'] = hasil['first_login'];
+
+          await AuthState.instance.login(
+            role: UserRole.vendor,
+            email: emailText,
+            fullName: (vendorProfile['company_name'] ??
+                    vendorProfile['full_name'] ??
+                    emailText)
+                .toString(),
+            extra: vendorProfile,
+          );
 
           // Perisai keselamatan 'mounted context' wajib dipasang sebelum melompat screen!
           if (!mounted) return;

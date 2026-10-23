@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http; // http.get
 import 'dart:convert'; //  json.decode
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
+import '../services/auth_state.dart';
 import '../../main.dart';
 
 /// Interface 4: "Help Desk Portal — Operator Sign In" screen.
@@ -76,6 +77,12 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
             (data['role'] ?? 'staff').toString().toLowerCase().trim();
         String fullName =
             (data['full_name'] ?? 'Staff UniKL').toString().trim();
+
+        await AuthState.instance.login(
+          role: roleFromString(userRole),
+          email: email,
+          fullName: fullName,
+        );
 
         if (!mounted) return;
 
@@ -167,6 +174,12 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
             (data['role'] ?? 'staff').toString().toLowerCase().trim();
         String fullName =
             (data['full_name'] ?? 'Admin UniKL').toString().trim();
+
+        await AuthState.instance.login(
+          role: roleFromString(userRole),
+          email: currentLoggedInUserEmail,
+          fullName: fullName,
+        );
 
         if (!mounted) return;
 

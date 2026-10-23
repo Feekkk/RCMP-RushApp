@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../services/auth_state.dart';
 import '../screens/helpdesk_home_screen.dart';
 import '../screens/vendor_portal_screen.dart';
 import '../screens/user_login_screen.dart';
@@ -40,9 +41,44 @@ Page<void> _page(GoRouterState state, Widget child) {
   );
 }
 
+/// Paths anyone can open without being signed in.
+const _publicPaths = {'/', '/vendor', '/operator', '/login'};
+
+/// Route guard: returns the path to bounce to, or `null` to allow the
+/// navigation through. Re-run automatically whenever [AuthState] changes
+/// (see `refreshListenable` below), so logging in/out immediately
+/// re-evaluates whatever route is current.
+String? _authGuard(BuildContext context, GoRouterState state) {
+  final auth = AuthState.instance;
+  final path = state.matchedLocation;
+
+  if (_publicPaths.contains(path)) return null;
+
+  bool hasRole(List<UserRole> allowed) => allowed.contains(auth.role);
+
+  if (path.startsWith('/admin')) {
+    return hasRole([UserRole.admin]) ? null : '/operator';
+  }
+  if (path.startsWith('/hod')) {
+    return hasRole([UserRole.hod]) ? null : '/operator';
+  }
+  if (path.startsWith('/staff') || path == '/tickets/workspace') {
+    return hasRole([UserRole.staff, UserRole.admin]) ? null : '/operator';
+  }
+  if (path == '/vendor/dashboard' || path == '/vendor_ticket_workspace') {
+    return hasRole([UserRole.vendor]) ? null : '/vendor';
+  }
+  // Remaining routes are the student-facing complaint flow
+  // ('/dashboard', '/complaint/*', '/my-submissions', '/tickets/user-detail'):
+  // any signed-in user may use them.
+  return auth.isLoggedIn ? null : '/login';
+}
+
 final GoRouter appRouter = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: '/',
+  refreshListenable: AuthState.instance,
+  redirect: _authGuard,
   routes: [
     GoRoute(
       path: '/',

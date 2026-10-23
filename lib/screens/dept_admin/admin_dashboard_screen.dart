@@ -7,6 +7,7 @@ import '../../theme/app_theme.dart';
 import '../../theme/admin_theme.dart';
 import '../../main.dart';
 import '../../services/notification_service.dart';
+import '../../services/auth_state.dart';
 import 'dart:async';
 
 const _adminNavItems = [
@@ -438,6 +439,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 const PopupMenuDivider(),
                 PopupMenuItem<void>(
                   onTap: () {
+                    AuthState.instance.logout();
                     context.go('/');
                     AppSnackBar.show(context, 'Logged out successfully.');
                   },

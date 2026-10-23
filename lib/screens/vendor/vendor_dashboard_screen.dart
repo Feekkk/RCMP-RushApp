@@ -7,6 +7,7 @@ import 'profile_setup_dialog.dart';
 import '../../theme/app_theme.dart';
 import 'company_staff_screen.dart';
 import '../../services/notification_service.dart'; // notification
+import '../../services/auth_state.dart';
 import 'dart:async'; // Timer
 
 class VendorDashboardScreen extends StatefulWidget {
@@ -851,6 +852,7 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
           );
         },
         onLogoutTap: () {
+          AuthState.instance.logout();
           context.go('/');
         },
       ),

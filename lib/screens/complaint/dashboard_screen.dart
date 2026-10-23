@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../theme/app_theme.dart';
 import '../../main.dart';
+import '../../services/auth_state.dart';
 
 /// Interface 9: Dashboard screen — "Quick Actions" + "Recent Activity".
 class DashboardScreen extends StatefulWidget {
@@ -377,6 +378,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: BorderRadius.circular(12)),
                 onSelected: (dynamic value) {
                   if (value == 'logout') {
+                    AuthState.instance.logout();
                     context.go('/');
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Logged out successfully.')));
