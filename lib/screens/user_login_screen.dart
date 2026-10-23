@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -52,10 +53,8 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                 .toLowerCase();
 
             // 2.  terus kekalkan masuk ke fail  /complaint/fill
-            Navigator.pushReplacementNamed(
-              context,
-              '/complaint/fill',
-              arguments: {
+            context.pushReplacement('/complaint/fill',
+              extra: {
                 'nama_user': namaDariDB,
                 'emel_user': emelDariDB,
                 'selected_dept':
@@ -262,11 +261,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                           ),
                     const SizedBox(height: 16),
                     TextButton.icon(
-                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        '/',
-                        (route) => false,
-                      ),
+                      onPressed: () => context.go('/'),
                       icon: const Icon(Icons.home_outlined,
                           size: 14, color: AppColors.textSecondary),
                       label: const Text(

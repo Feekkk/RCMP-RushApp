@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -496,9 +497,8 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
                                           Navigator.pop(context);
 // Terus membawa petugas masuk ke skrin workspace detail tiket!
                                           final muatSemulaDashboardStaff =
-                                              await Navigator.pushNamed(
-                                                  context, '/tickets/workspace',
-                                                  arguments: tiket);
+                                              await context.push('/tickets/workspace',
+                                                  extra: tiket);
                                           if (muatSemulaDashboardStaff ==
                                               true) {
                                             _ambilDataStaffDashboard();
@@ -689,8 +689,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
                 const PopupMenuDivider(),
                 PopupMenuItem<void>(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/', (route) => false);
+                    context.go('/');
                     AppSnackBar.show(context, 'Logged out successfully.');
                   },
                   child: Row(
@@ -965,10 +964,8 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
                                             child: InkWell(
                                               onTap: () async {
                                                 final muatSemula =
-                                                    await Navigator.pushNamed(
-                                                        context,
-                                                        '/tickets/workspace',
-                                                        arguments: ticket);
+                                                    await context.push('/tickets/workspace',
+                                                        extra: ticket);
                                                 if (muatSemula == true)
                                                   _ambilDataStaffDashboard();
                                               },

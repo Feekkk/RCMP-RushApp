@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 
 /// Shared design tokens for the RUSH / UniKL RCMP portals.
@@ -1089,11 +1090,7 @@ class ConsoleSidebar extends StatelessWidget {
                 return InkWell(
                   onTap: () {
                     if (!active) {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        item.route,
-                        (route) => false,
-                      );
+                      context.go(item.route);
                     }
                   },
                   child: Container(

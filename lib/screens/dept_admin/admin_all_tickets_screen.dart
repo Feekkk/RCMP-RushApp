@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -482,9 +483,8 @@ class _AdminAllTicketsScreenState extends State<AdminAllTicketsScreen> {
                           assignedStaff: namaStaffRemark,
                           onView: () async {
                             // Pass the entire record packet down to workspace dynamically
-                            final refresh = await Navigator.pushNamed(
-                                context, '/tickets/workspace',
-                                arguments: ticket);
+                            final refresh = await context.push('/tickets/workspace',
+                                extra: ticket);
                             if (refresh == true) _ambilSenaraiTiketAdmin();
                           },
                         ),

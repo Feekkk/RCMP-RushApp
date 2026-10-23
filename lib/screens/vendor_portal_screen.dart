@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -88,10 +89,8 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
           );
 
           // : Meluncur lurus tanpa sekatan ke pintu portal vendor dashboard!
-          Navigator.pushReplacementNamed(
-            context,
-            '/vendor/dashboard',
-            arguments: vendorProfile,
+          context.pushReplacement('/vendor/dashboard',
+            extra: vendorProfile,
           );
         } else {
           _pamerAmaranMesej(
@@ -128,7 +127,7 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
         subtitle: 'RUSH — Vendor Portal',
         trailing: TextButton.icon(
           onPressed: () =>
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false),
+              context.go('/'),
           icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.navy),
           label: const Text('Back to Home',
               style: TextStyle(color: AppColors.navy, fontSize: 12)),

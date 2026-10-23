@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'; //  kIsWeb
 import 'package:http/http.dart' as http; // http.get
@@ -85,14 +86,14 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
         };
 
         if (userRole == 'admin') {
-          Navigator.pushReplacementNamed(context, '/admin/dashboard',
-              arguments: navigationArgs);
+          context.pushReplacement('/admin/dashboard',
+              extra: navigationArgs);
         } else if (userRole == 'hod') {
-          Navigator.pushReplacementNamed(context, '/hod/dashboard',
-              arguments: navigationArgs);
+          context.pushReplacement('/hod/dashboard',
+              extra: navigationArgs);
         } else {
-          Navigator.pushReplacementNamed(context, '/staff/dashboard',
-              arguments: navigationArgs);
+          context.pushReplacement('/staff/dashboard',
+              extra: navigationArgs);
         }
       } else {
         _tampilMesej("Ralat pelayan: Status ${response.statusCode}");
@@ -178,16 +179,16 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
 
         if (userRole == 'admin') {
           print("Akaun Admin Dikesan! Meluncur ke Admin Dashboard...");
-          Navigator.pushReplacementNamed(context, '/admin/dashboard',
-              arguments: navigationArgs);
+          context.pushReplacement('/admin/dashboard',
+              extra: navigationArgs);
         } else if (userRole == 'hod') {
           print("Akaun HOD Dikesan! Meluncur ke HOD Dashboard...");
-          Navigator.pushReplacementNamed(context, '/hod/dashboard',
-              arguments: navigationArgs);
+          context.pushReplacement('/hod/dashboard',
+              extra: navigationArgs);
         } else {
           print("Akaun Staff Biasa Dikesan! Meluncur ke Staff Dashboard...");
-          Navigator.pushReplacementNamed(context, '/staff/dashboard',
-              arguments: navigationArgs);
+          context.pushReplacement('/staff/dashboard',
+              extra: navigationArgs);
         }
       } else {
         _tampilMesej("Ralat pelayan: Status ${response.statusCode}");
@@ -206,11 +207,7 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
         title: 'UNIKL RCMP',
         subtitle: 'Help Desk Portal',
         trailing: TextButton.icon(
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/',
-            (route) => false,
-          ),
+          onPressed: () => context.go('/'),
           icon: const Icon(Icons.arrow_back, size: 14, color: AppColors.navy),
           label: const Text('Back to Home',
               style: TextStyle(color: AppColors.navy, fontSize: 12)),
@@ -284,7 +281,7 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
                         ),
                         // Use 'recognizer' instead of an 'onTap' parameter:
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.pushNamed(context, '/'),
+                          ..onTap = () => context.push('/'),
                       ),
                     ],
                   ),

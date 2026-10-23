@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -437,8 +438,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 const PopupMenuDivider(),
                 PopupMenuItem<void>(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/', (route) => false);
+                    context.go('/');
                     AppSnackBar.show(context, 'Logged out successfully.');
                   },
                   child: Row(
@@ -1162,7 +1162,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       onTap: () {
         Navigator.pop(context);
         // route ke /tickets/workspace !
-        Navigator.pushNamed(context, '/tickets/workspace', arguments: tkt);
+        context.push('/tickets/workspace', extra: tkt);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),

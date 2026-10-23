@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../theme/app_theme.dart';
@@ -187,10 +188,8 @@ class _ComplaintConfirmSubmissionsScreenState
               _senaraiAduan.clear();
             });
 
-            Navigator.pushNamed(
-              context,
-              '/complaint/submitted',
-              arguments: {'ticket_ids': ticketIds},
+            context.push('/complaint/submitted',
+              extra: {'ticket_ids': ticketIds},
             );
           }
         } else {
@@ -311,11 +310,7 @@ class _ComplaintConfirmSubmissionsScreenState
         title: 'UNIKL RCMP',
         subtitle: 'Help Desk System',
         trailing: TextButton.icon(
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/dashboard',
-            (route) => false,
-          ),
+          onPressed: () => context.go('/dashboard'),
           icon: const Icon(Icons.close, size: 14, color: AppColors.navy),
           label: const Text('Close',
               style: TextStyle(color: AppColors.navy, fontSize: 12)),
@@ -374,8 +369,8 @@ class _ComplaintConfirmSubmissionsScreenState
                           aduan['attachment_name'] ??
                           'No attachment',
                       onEdit: () {
-                        Navigator.pushNamed(context, '/complaint/fill',
-                            arguments: aduan);
+                        context.push('/complaint/fill',
+                            extra: aduan);
                       },
                       onCancel: () => _tampilDialogPadam(index),
                     ),

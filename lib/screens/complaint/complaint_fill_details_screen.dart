@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -325,10 +326,8 @@ class _ComplaintFillDetailsScreenState
       'attachment_file_path': kIsWeb ? null : _attachedFile?.path,
     };
 
-    Navigator.pushNamed(
-      context,
-      '/complaint/preview',
-      arguments: dataBorangBaru,
+    context.push('/complaint/preview',
+      extra: dataBorangBaru,
     );
   }
 
@@ -340,8 +339,7 @@ class _ComplaintFillDetailsScreenState
         title: 'UNIKL RCMP',
         subtitle: 'Help Desk System',
         trailing: TextButton.icon(
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-              context, '/dashboard', (route) => false),
+          onPressed: () => context.go('/dashboard'),
           icon: const Icon(Icons.close, size: 14, color: AppColors.navy),
           label: const Text('Close',
               style: TextStyle(color: AppColors.navy, fontSize: 12)),
@@ -540,7 +538,7 @@ class _ComplaintFillDetailsScreenState
                     SecondaryButton(
                       label: 'Cancel',
                       onPressed: () {
-                        Navigator.pushNamed(context, '/dashboard');
+                        context.push('/dashboard');
                       },
                     ),
                     const SizedBox(width: 12),

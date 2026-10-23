@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart'; // Ditambah untuk fungsi Clipboard.setData
 import '../../theme/app_theme.dart';
 import 'add_another_item_dialog.dart';
@@ -118,11 +119,7 @@ class ComplaintSubmittedScreen extends StatelessWidget {
                         height: 44,
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              '/dashboard',
-                              (route) => false,
-                            );
+                            context.go('/dashboard');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.navy,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -242,9 +243,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               onTap: () async {
                                                 Navigator.pop(
                                                     context); // Auto-tutup popup menu loceng!
-                                                Navigator.pushNamed(context,
-                                                    '/tickets/user-detail',
-                                                    arguments: aduan);
+                                                context.push('/tickets/user-detail',
+                                                    extra: aduan);
                                               },
                                               child: Container(
                                                 padding:
@@ -377,8 +377,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: BorderRadius.circular(12)),
                 onSelected: (dynamic value) {
                   if (value == 'logout') {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/helpdesk_home_screen', (route) => false);
+                    context.go('/');
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Logged out successfully.')));
                   }
@@ -466,14 +465,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           title: 'Submit Complaint',
                           subtitle: 'Report a new issue',
                           onTap: () =>
-                              Navigator.pushNamed(context, '/complaint/fill'),
+                              context.push('/complaint/fill'),
                         ),
                         _QuickActionCard(
                           icon: Icons.list_alt_outlined,
                           title: 'My Submissions',
                           subtitle: 'View & track all submissions',
                           onTap: () =>
-                              Navigator.pushNamed(context, '/my-submissions'),
+                              context.push('/my-submissions'),
                         ),
                       ];
                       return isNarrow
@@ -504,7 +503,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               color: AppColors.textPrimary)),
                       TextButton(
                         onPressed: () =>
-                            Navigator.pushNamed(context, '/my-submissions'),
+                            context.push('/my-submissions'),
                         child: const Text('View all',
                             style: TextStyle(
                                 fontSize: 12,
@@ -572,10 +571,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         statusColor: _dapatkanWarnaStatus(currentStatus),
                         statusBg: _dapatkanBgStatus(currentStatus),
                         onView: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/tickets/user-detail',
-                            arguments: aduan,
+                          context.push('/tickets/user-detail',
+                            extra: aduan,
                           );
                         },
                       );

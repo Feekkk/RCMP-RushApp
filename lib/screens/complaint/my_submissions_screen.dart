@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -255,10 +256,8 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
                       statusColor: _getStatusColor(currentStatus),
                       statusBg: _getStatusBg(currentStatus),
                       onView: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/tickets/user-detail',
-                          arguments: ticket,
+                        context.push('/tickets/user-detail',
+                          extra: ticket,
                         );
                       },
                     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../theme/app_theme.dart';
 import 'complaint_fill_details_screen.dart';
 
@@ -31,11 +32,7 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
         title: 'UNIKL RCMP',
         subtitle: 'Help Desk System',
         trailing: TextButton.icon(
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context,
-            '/dashboard',
-            (route) => false,
-          ),
+          onPressed: () => context.go('/dashboard'),
           icon: const Icon(Icons.close, size: 14, color: AppColors.navy),
           label: const Text('Close',
               style: TextStyle(color: AppColors.navy, fontSize: 12)),
@@ -178,10 +175,8 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                           newComplaint,
                         ];
 
-                        Navigator.pushNamed(
-                          context,
-                          '/complaint/confirm',
-                          arguments: allComplaints,
+                        context.push('/complaint/confirm',
+                          extra: allComplaints,
                         );
                       },
                     ),

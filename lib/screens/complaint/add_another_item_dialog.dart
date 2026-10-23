@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../theme/app_theme.dart';
 
 /// "Add Another Item" — modal where the user picks what department to
@@ -71,10 +72,8 @@ class AddAnotherItemDialog extends StatelessWidget {
               bg: const Color(0xFFEAF1FB),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  '/complaint/fill',
-                  arguments: {
+                context.push('/complaint/fill',
+                  extra: {
                     'selected_dept': 'it',
                     'isAddAnother': true,
                     'existing_list': existingList ?? [],
@@ -90,10 +89,8 @@ class AddAnotherItemDialog extends StatelessWidget {
               bg: const Color(0xFFEAF7EE),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  '/complaint/fill',
-                  arguments: {
+                context.push('/complaint/fill',
+                  extra: {
                     'selected_dept': 'maintenance',
                     'isAddAnother': true,
                     'existing_list': existingList ?? [],
@@ -109,10 +106,8 @@ class AddAnotherItemDialog extends StatelessWidget {
               bg: const Color(0xFFFCEFE1),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  '/complaint/fill',
-                  arguments: {
+                context.push('/complaint/fill',
+                  extra: {
                     'selected_dept': 'admin',
                     'isAddAnother': true,
                     'existing_list': existingList ?? [],

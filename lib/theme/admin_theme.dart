@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'app_theme.dart';
 import '../main.dart';
 
@@ -107,9 +108,9 @@ class PortalNavDrawer extends StatelessWidget {
                     onTap: () {
                       Navigator.pop(context); // close drawer
                       if (!active) {
-                        Navigator.pushReplacementNamed(context, item.route,
+                        context.pushReplacement(item.route,
                             // 🚀 SUNTIKAN UTAMA: Kita pass bungkusan arguments tulin yang dipegang oleh constructor drawer!
-                            arguments: {
+                            extra: {
                               "email": ((ModalRoute.of(context)
                                               ?.settings
                                               .arguments
@@ -233,8 +234,7 @@ class PortalNavDrawer extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                     onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/helpdesk_home_screen', (route) => false);
+                      context.go('/');
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Logged out successfully.')));
                     },
@@ -817,10 +817,8 @@ class PortalBottomNav extends StatelessWidget {
             onTap: () {
               if (!active) {
                 final args = ModalRoute.of(context)?.settings.arguments;
-                Navigator.pushReplacementNamed(
-                  context,
-                  item.route,
-                  arguments: args,
+                context.pushReplacement(item.route,
+                  extra: args,
                 );
               }
             },
@@ -993,8 +991,7 @@ AppBar buildAdminAppBar({
               const PopupMenuDivider(),
               PopupMenuItem<void>(
                 onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/', (route) => false);
+                  context.go('/');
                   AppSnackBar.show(context, 'Logged out successfully.');
                 },
                 child: Row(

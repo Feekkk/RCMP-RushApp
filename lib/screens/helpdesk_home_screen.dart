@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 
 /// Interface 1: "RUSH — RCMP User Helpdesk" home screen.
@@ -22,13 +23,13 @@ class HelpdeskHomeScreen extends StatelessWidget {
             _RoundIconButton(
               icon: Icons.person_outline,
               tooltip: 'Operator Portal',
-              onTap: () => Navigator.pushNamed(context, '/operator'),
+              onTap: () => context.push('/operator'),
             ),
             const SizedBox(width: 8),
             _RoundIconButton(
               icon: Icons.storefront_outlined,
               tooltip: 'Vendor Portal',
-              onTap: () => Navigator.pushNamed(context, '/vendor'),
+              onTap: () => context.push('/vendor'),
             ),
           ],
         ),
@@ -87,28 +88,22 @@ class HelpdeskHomeScreen extends StatelessWidget {
                         _DepartmentTile(
                           icon: Icons.computer,
                           label: 'IT',
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            '/login',
-                            arguments: 'IT',
+                          onTap: () => context.push('/login',
+                            extra: 'IT',
                           ),
                         ),
                         _DepartmentTile(
                           icon: Icons.apartment,
                           label: 'ADMINISTRATION\n& FACILITIES',
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            '/login',
-                            arguments: 'Administration & Facilities',
+                          onTap: () => context.push('/login',
+                            extra: 'Administration & Facilities',
                           ),
                         ),
                         _DepartmentTile(
                           icon: Icons.build_outlined,
                           label: 'MAINTENANCE',
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            '/login',
-                            arguments: 'Maintenance',
+                          onTap: () => context.push('/login',
+                            extra: 'Maintenance',
                           ),
                         ),
                       ],

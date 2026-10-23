@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -164,8 +165,8 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
     return InkWell(
       onTap: () {
         Navigator.pop(context); // Tutup menu loceng
-        Navigator.pushNamed(context, '/vendor_ticket_workspace',
-            arguments: tkt);
+        context.push('/vendor_ticket_workspace',
+            extra: tkt);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
@@ -435,9 +436,8 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
                                 color: Color(0xFF0D3B66))),
                         onPressed: () async {
 // Tolong daftarkan route nama '/vendor_ticket_workspace' di fail main.dart
-                          final hasilRefresh = await Navigator.pushNamed(
-                              context, '/vendor_ticket_workspace',
-                              arguments: tiket);
+                          final hasilRefresh = await context.push('/vendor_ticket_workspace',
+                              extra: tiket);
                           if (hasilRefresh == true) {
                             _tarikTiketVendorLive(); // Auto-refresh data kaunter bila vendor patah balik belakang!
                           }
@@ -851,7 +851,7 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
           );
         },
         onLogoutTap: () {
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          context.go('/');
         },
       ),
       body: _isLoading
