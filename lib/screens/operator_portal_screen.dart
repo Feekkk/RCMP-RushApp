@@ -155,65 +155,6 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
     }
   }
 
-  // peranan akaun di Laragon & hantar ke destinasi tepat
-  Future<void> _prosesSemakPerananDanMasuk() async {
-    final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
-
-    final url = Uri.parse(
-        'http://$domain/helpdesk_api/check_user_role.php?email=$currentLoggedInUserEmail');
-
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-
-        if (data['status'] != 'berjaya') {
-          _tampilMesej(data['message'] ?? 'Login failed.');
-          return;
-        }
-
-        String userRole =
-            (data['role'] ?? 'staff').toString().toLowerCase().trim();
-        String fullName =
-            (data['full_name'] ?? 'Admin UniKL').toString().trim();
-
-        await AuthState.instance.login(
-          role: roleFromString(userRole),
-          email: currentLoggedInUserEmail,
-          fullName: fullName,
-        );
-
-        if (!mounted) return;
-
-        // ===  PENGALIHAN UTAMA (AUTOMATIC REDIRECTION INTERCEPTOR) ===
-        final Map<String, dynamic> navigationArgs = {
-          "email": currentLoggedInUserEmail,
-          "full_name": fullName,
-          "role": userRole.toUpperCase()
-        };
-
-        if (userRole == 'admin') {
-          debugPrint("Akaun Admin Dikesan! Meluncur ke Admin Dashboard...");
-          context.pushReplacement('/admin/dashboard',
-              extra: navigationArgs);
-        } else if (userRole == 'hod') {
-          debugPrint("Akaun HOD Dikesan! Meluncur ke HOD Dashboard...");
-          context.pushReplacement('/hod/dashboard',
-              extra: navigationArgs);
-        } else {
-          debugPrint("Akaun Staff Biasa Dikesan! Meluncur ke Staff Dashboard...");
-          context.pushReplacement('/staff/dashboard',
-              extra: navigationArgs);
-        }
-      } else {
-        _tampilMesej("Ralat pelayan: Status ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint("Ralat ketika menyiasat suis peranan: $e");
-      _tampilMesej("Ralat Sambungan: Pastikan Laragon aktif. ($e)");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -316,24 +257,12 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
                 ],
                 _isLoading
                     ? const CircularProgressIndicator()
-                    : Column(
-                        children: [
-                          MicrosoftButton(
-                            onPressed: kDevAuthBypass
-                                ? () => devLogin(context, _devRole)
-                                : () {
-                                    _prosesSemakPerananDanMasuk();
-                                  },
-                          ),
-                          const SizedBox(height: 10),
-                          MicrosoftButton(
-                            onPressed: kDevAuthBypass
-                                ? () => devLogin(context, _devRole)
-                                : () async {
-                                    await _handleRealSSOLogin();
-                                  },
-                          ),
-                        ],
+                    : MicrosoftButton(
+                        onPressed: kDevAuthBypass
+                            ? () => devLogin(context, _devRole)
+                            : () async {
+                                await _handleRealSSOLogin();
+                              },
                       ),
                 const SizedBox(height: 6),
                 const Text(

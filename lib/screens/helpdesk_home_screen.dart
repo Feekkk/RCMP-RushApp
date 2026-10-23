@@ -43,31 +43,10 @@ class HelpdeskHomeScreen extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.directions_run,
-                            color: AppColors.gold, size: 34),
-                        SizedBox(width: 8),
-                        Text(
-                          'USH',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: AppColors.navy,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'RUSH USER HELPDESK',
-                      style: TextStyle(
-                        fontSize: 11,
-                        letterSpacing: 2,
-                        color: AppColors.textMuted,
-                      ),
+                    Image.asset(
+                      'lib/assets/images/rush-logo.png',
+                      height: 85,
+                      fit: BoxFit.contain,
                     ),
                     const SizedBox(height: 36),
                     const Text(
@@ -87,7 +66,7 @@ class HelpdeskHomeScreen extends StatelessWidget {
                       children: [
                         _DepartmentTile(
                           icon: Icons.computer,
-                          label: 'IT',
+                          label: 'INFORMATION TECHNOLOGY',
                           onTap: () => context.push(
                             '/login',
                             extra: 'IT',

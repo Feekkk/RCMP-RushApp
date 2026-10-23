@@ -23,13 +23,23 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
 
 flutter:
   uses-material-design: true
   assets:
     - lib/assets/images/unikl_logo.png
     - lib/assets/images/bg.jpg
+    - lib/assets/images/rush-mobile.png
+    - lib/assets/images/rush-logo.png
   # Uncomment once you add a real campus photo, used by UserLoginScreen
   # as the full-bleed background (falls back to a gradient if missing).
   # assets:
   #   - assets/images/campus_background.jpg
+
+flutter_launcher_icons:
+  android: true
+  image_path: "lib/assets/images/rush-mobile.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "lib/assets/images/rush-mobile.png"
