@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../theme/app_theme.dart';
-import '../../theme/admin_theme.dart';
 import '../../main.dart';
 
 /// "My Submissions" — list of all complaints/requests the signed-in user has submitted.
@@ -68,7 +67,7 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
           _isLoading = false;
         });
       } else {
-        print("Gagal muat submissions. Status: ${respon.statusCode}");
+        debugPrint("Gagal muat submissions. Status: ${respon.statusCode}");
         setState(() {
           _listTickets = [];
           _filteredTickets = [];
@@ -76,7 +75,7 @@ class _MySubmissionsScreenState extends State<MySubmissionsScreen> {
         });
       }
     } catch (e) {
-      print("Ralat sambungan Laragon: $e");
+      debugPrint("Ralat sambungan Laragon: $e");
       setState(() {
         _listTickets = [];
         _filteredTickets = [];

@@ -74,8 +74,10 @@ class _FeedbackPopupContentState extends State<_FeedbackPopupContent> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Network error: $e")));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Network error: $e")));
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

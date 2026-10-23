@@ -4,9 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../theme/app_theme.dart';
-import '../../theme/admin_theme.dart';
-import '../../main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class VendorTicketWorkspaceScreen extends StatefulWidget {
   const VendorTicketWorkspaceScreen({super.key});
@@ -136,12 +133,12 @@ class _VendorTicketWorkspaceScreenState
                     freshData['updated_at'] ??
                     'Just Now';
           });
-          print(
+          debugPrint(
               "✅ VENDOR WORKSPACE DATA SYNCHRONIZED: Responded Time = ${_ticketData['real_minutes_used']}");
         }
       }
     } catch (e) {
-      print("Error sync data tiket vendor side: $e");
+      debugPrint("Error sync data tiket vendor side: $e");
     }
   }
 
@@ -157,7 +154,7 @@ class _VendorTicketWorkspaceScreenState
         });
       }
     } catch (e) {
-      print("Ralat sejarah vendor: $e");
+      debugPrint("Ralat sejarah vendor: $e");
     }
   }
 
@@ -174,7 +171,7 @@ class _VendorTicketWorkspaceScreenState
         });
       }
     } catch (e) {
-      print("Ralat feedback vendor: $e");
+      debugPrint("Ralat feedback vendor: $e");
       setState(() => _isFeedbackLoading = false);
     }
   }
@@ -191,7 +188,7 @@ class _VendorTicketWorkspaceScreenState
         });
       }
     } catch (e) {
-      print("Ralat SLA vendor: $e");
+      debugPrint("Ralat SLA vendor: $e");
     }
   }
 
@@ -220,11 +217,11 @@ class _VendorTicketWorkspaceScreenState
             _senaraiStaffVendorLiveDB = decodedData;
           }
         });
-        print(
+        debugPrint(
             "LIVE FILTERED VENDOR STAFF LOADED: ${decodedData.length} people for Vendor ID: $dynamicVendorIdLive");
       }
     } catch (e) {
-      print("Ralat sedut staff vendor live: $e");
+      debugPrint("Ralat sedut staff vendor live: $e");
       // Fallback safe hiasan jika sambungan terputus
       setState(() {
         _senaraiStaffVendorLiveDB = [
@@ -325,6 +322,7 @@ class _VendorTicketWorkspaceScreenState
         }),
       );
 
+      if (!mounted) return;
       if (respon.statusCode == 200) {
         final hasil = json.decode(respon.body);
         if (hasil['status'] == 'berjaya') {
@@ -363,153 +361,15 @@ class _VendorTicketWorkspaceScreenState
             content: Text('Server Error: Code ${respon.statusCode}')));
       }
     } catch (e) {
-      print("Error fatal hantaran vendor: $e");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Connection Failure: • $e')));
+      debugPrint("Error fatal hantaran vendor: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Connection Failure: • $e')));
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
-  }
-
-  void _pamerDialogRemarksPaksaan({
-    required String tajuk,
-    required String hint,
-    required Color warnaButang,
-    required Function(String) onConfirm,
-  }) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        final TextEditingController _popupInputController =
-            TextEditingController();
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: Text(tajuk,
-              style:
-                  const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          content: TextField(
-            controller: _popupInputController,
-            decoration: InputDecoration(
-                hintText: hint, hintStyle: const TextStyle(fontSize: 12)),
-          ),
-          actions: [
-            TextButton(
-                child: const Text('Cancel'),
-                onPressed: () => Navigator.pop(context)),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: warnaButang),
-              child: const Text('Confirm & Save',
-                  style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                if (_popupInputController.text.trim().isEmpty) return;
-                Navigator.pop(context);
-                onConfirm(_popupInputController.text);
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  void _tampilkanPopUpUpdateStatusVendor() {
-    String temporaryStatusSelection = 'Closed';
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setDialogState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: const BoxDecoration(
-                      color: Color(0xFFEAF1FB), shape: BoxShape.circle),
-                  child: const Icon(Icons.cloud_upload_outlined,
-                      color: AppColors.navy, size: 28),
-                ),
-                const SizedBox(height: 16),
-                const Text('Update Status?',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary)),
-                const SizedBox(height: 4),
-                const Text('Confirm the status change you are about to apply.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11.5, color: Colors.grey)),
-                const SizedBox(height: 20),
-                DropdownButtonFormField<String>(
-                  value: temporaryStatusSelection,
-                  decoration: InputDecoration(
-                    labelText: 'Status',
-                    labelStyle: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.navy),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                  items: const [
-                    DropdownMenuItem(
-                        value: 'In Progress',
-                        child: Text('In Progress',
-                            style: TextStyle(fontSize: 12))),
-                    DropdownMenuItem(
-                        value: 'Closed',
-                        child: Text('Closed', style: TextStyle(fontSize: 12))),
-                  ],
-                  onChanged: (val) {
-                    if (val != null)
-                      setDialogState(() => temporaryStatusSelection = val);
-                  },
-                ),
-                const SizedBox(height: 14),
-                TextField(
-                  controller: _remarksMessageController,
-                  maxLines: 2,
-                  style: const TextStyle(fontSize: 12),
-                  decoration: InputDecoration(
-                    labelText: 'Action Resolution Note',
-                    labelStyle: const TextStyle(fontSize: 11),
-                    hintText: 'Enter recovery action details here...',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                  ),
-                )
-              ],
-            ),
-            actions: [
-              TextButton(
-                  child: const Text('Cancel'),
-                  onPressed: () => Navigator.pop(context)),
-              ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: AppColors.navy),
-                child: const Text('✓ Yes, Save',
-                    style: TextStyle(color: Colors.white)),
-                onPressed: () {
-                  if (_remarksMessageController.text.trim().isEmpty) return;
-                  Navigator.pop(context);
-                  _hantarResponVendorKePHP(
-                      temporaryStatusSelection, _remarksMessageController.text);
-                },
-              )
-            ],
-          );
-        });
-      },
-    );
   }
 
   Color _getStatusColor(String status) {
@@ -918,7 +778,6 @@ class _VendorTicketWorkspaceScreenState
     String statusLabel =
         (_selectedStatus ?? _ticketData['status'] ?? 'OPEN').toUpperCase();
     String myDepartment = _ticketData['my_department'] ?? 'No Department';
-    String emailUser = _ticketData['submitter_email'] ?? 'No Email';
     String description = _ticketData['description'] ?? 'No description text.';
     String dateCreated = _ticketData['created_at'] ?? 'No Date';
     return DefaultTabController(
@@ -1549,7 +1408,10 @@ class _VendorTicketWorkspaceScreenState
                                                                 '')
                                                             .trim();
                                                       }
-                                                    } catch (e) {}
+                                                    } catch (e) {
+                                                      debugPrint(
+                                                          'Failed to parse responded-in time: $e');
+                                                    }
                                                   }
                                                   return masaDitemui;
                                                 })()} · ${_ticketData['real_save_date_time'] ?? _lastUpdatedText}",

@@ -111,7 +111,7 @@ class _VendorPortalScreenState extends State<VendorPortalScreen> {
         _pamerAmaranMesej('Server Response Error: Status ${respon.statusCode}');
       }
     } catch (e) {
-      print("Ralat sambungan login vendor: $e");
+      debugPrint("Ralat sambungan login vendor: $e");
       _pamerAmaranMesej(
           'Connection failure to Laragon server. Please check your Apache connection.');
     } finally {

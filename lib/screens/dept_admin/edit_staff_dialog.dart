@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../theme/app_theme.dart';
-import '../../theme/admin_theme.dart';
 import '../../main.dart';
 
 Future<void> showEditStaffDialog(
@@ -109,7 +108,7 @@ class _EditStaffDialogContentState extends State<_EditStaffDialogContent> {
         });
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
@@ -154,7 +153,7 @@ class _EditStaffDialogContentState extends State<_EditStaffDialogContent> {
         }
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

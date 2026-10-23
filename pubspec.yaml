@@ -1,6 +1,6 @@
-name: rush_app
-description: "RUSH — UniKL RCMP User Helpdesk (Flutter UI clone)."
-publish_to: 'none'
+name: RUSH
+description: "RUSH — UniKL RCMP User Helpdesk"
+publish_to: 'UNIKL RCMP'
 version: 1.0.0+1
 
 environment:

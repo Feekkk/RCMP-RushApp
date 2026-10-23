@@ -73,7 +73,7 @@ class _ComplaintFillDetailsScreenState
         // 3. AFTER SWITCHING TAB, FORCE FETCH NEW DROPDOWN DATA FROM LARAGON!
         _ambilDataDropdown(_departmentsTabs[_activeTab]);
 
-        print(
+        debugPrint(
             "TAB INDEX AUTO-LOCKED AT: $_activeTab FOR DEPARTMENT: $chosenDept");
       }
       _isInitialized = true;
@@ -114,11 +114,11 @@ class _ComplaintFillDetailsScreenState
           _isLoading = false;
         });
       } else {
-        print("Failed to load dropdown data. Status: ${respon.statusCode}");
+        debugPrint("Failed to load dropdown data. Status: ${respon.statusCode}");
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print("Connection error to Laragon: $e");
+      debugPrint("Connection error to Laragon: $e");
       setState(() => _isLoading = false);
     }
   }
@@ -228,10 +228,10 @@ class _ComplaintFillDetailsScreenState
           );
           _namaGambarSelected = _attachedFile!.name;
         });
-        print("Camera Photo Captured Successfully: $_namaGambarSelected");
+        debugPrint("Camera Photo Captured Successfully: $_namaGambarSelected");
       }
     } catch (e) {
-      print("Error capturing camera photo: $e");
+      debugPrint("Error capturing camera photo: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to open camera: $e')),
@@ -257,10 +257,10 @@ class _ComplaintFillDetailsScreenState
           _attachedFile = result.files.first;
           _namaGambarSelected = result.files.first.name;
         });
-        print("File Successfully Selected Live: $_namaGambarSelected");
+        debugPrint("File Successfully Selected Live: $_namaGambarSelected");
       }
     } catch (e) {
-      print("Universal File Picker Error: $e");
+      debugPrint("Universal File Picker Error: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to open file picker: $e')),
@@ -304,8 +304,6 @@ class _ComplaintFillDetailsScreenState
             .replaceAll('.', ' ')
             .replaceAll('_', ' ')
         : 'USER COMPLAINANT';
-
-    String? pathFizikalSelamat = kIsWeb ? null : _attachedFile?.path;
 
     Map<String, dynamic> dataBorangBaru = {
       'category': category,

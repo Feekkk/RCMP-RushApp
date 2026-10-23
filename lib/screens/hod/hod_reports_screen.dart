@@ -65,7 +65,7 @@ class _HodReportsScreenState extends State<HodReportsScreen> {
         });
       }
     } catch (e) {
-      print("Ralat memuat data laporan berpusat: $e");
+      debugPrint("Ralat memuat data laporan berpusat: $e");
       setState(() => _isLoading = false);
     }
   }

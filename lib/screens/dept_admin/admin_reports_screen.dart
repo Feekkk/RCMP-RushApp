@@ -77,7 +77,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
         });
       }
     } catch (e) {
-      print("Ralat memuat data laporan berpusat: $e");
+      debugPrint("Ralat memuat data laporan berpusat: $e");
       setState(() => _isLoading = false);
     }
   }
@@ -287,7 +287,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
                                           .toString();
                                     }
                                   } catch (e) {
-                                    print(
+                                    debugPrint(
                                         "Ralat hitung total resolve vendor: $e");
                                   }
                                   return '0'; // Fallback jikalau data kosong

@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../theme/app_theme.dart';
-import '../../theme/admin_theme.dart';
 import '../../main.dart';
 
 class TicketWorkspaceScreen extends StatefulWidget {
@@ -34,7 +33,6 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
   bool _isAssignedToVendorLive = false;
   String _assignedVendorNameLive = '';
 
-  final List<String> _statusOptions = ['Open', 'In Progress', 'Closed'];
   Map<String, dynamic> _ticketData = {};
   Map<String, dynamic>? _slaData;
 
@@ -164,13 +162,13 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
                 .toString()
                 .trim();
           });
-          print(
+          debugPrint(
               "🔎 SESSION IDENTIFIED: User $_namaStaffLive from $_jabatanStaffSesiLive");
           _tarikActiveVendorsDropdownDariPHP();
         }
       }
     } catch (e) {
-      print("Error fetch name: $e");
+      debugPrint("Error fetch name: $e");
     }
   }
 
@@ -214,11 +212,6 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
             if (dbStatusRaw == 'open') _selectedStatus = 'Open';
             if (dbStatusRaw == 'in_progress') _selectedStatus = 'In Progress';
             if (dbStatusRaw == 'closed') _selectedStatus = 'Closed';
-
-            bool adakahVendorDahResponTulen = _ticketLogs.any((log) {
-              String reasonLog = (log['reason'] ?? '').toString().toLowerCase();
-              return reasonLog.contains('handled by:');
-            });
 
             // ambil semua jenis key string dari database fresh, kalis argument null staff!
             String vId = (_ticketData['assigned_vendor_id'] ?? '0').toString();
@@ -271,12 +264,12 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
               _selectedAssignedEntityValue = _selectedStaff;
             }
           });
-          print(
+          debugPrint(
               "✅ STAFF-ADMIN SHARE WORKSPACE DATA LOCKED: Vendor Box Status = $_isAssignedToVendorLive");
         }
       }
     } catch (e) {
-      print("Error sync data tiket shared workspace staff side: $e");
+      debugPrint("Error sync data tiket shared workspace staff side: $e");
     }
   }
 
@@ -346,7 +339,7 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
       finalCleanDeptKeyword = "Corporate Communication Unit";
     }
 
-    print(
+    debugPrint(
         "🎯 DYNAMIC TARGET ENJIN DROPDOWN LOCKED FOR DEPT: [$finalCleanDeptKeyword] (Complaints Dept ID: $ticketDeptId)");
 
     final url = Uri.parse(
@@ -359,11 +352,11 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
         setState(() {
           _senaraiActiveVendorsDropdown = hasilRespon;
         });
-        print(
+        debugPrint(
             "SUCCESS DISPATCH DROPDOWN LOADED: ${_senaraiActiveVendorsDropdown.length} vendor items allocated for [$finalCleanDeptKeyword]");
       }
     } catch (e) {
-      print("Error sedut dropdown vendor dynamic multi-jabatan: $e");
+      debugPrint("Error sedut dropdown vendor dynamic multi-jabatan: $e");
     }
   }
 
@@ -380,7 +373,7 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
         });
       }
     } catch (e) {
-      print("Ralat menarik sejarah aktiviti tiket: $e");
+      debugPrint("Ralat menarik sejarah aktiviti tiket: $e");
     }
   }
 
@@ -397,7 +390,7 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
         });
       }
     } catch (e) {
-      print("Ralat feedback: $e");
+      debugPrint("Ralat feedback: $e");
       setState(() => _isFeedbackLoading = false);
     }
   }
@@ -423,7 +416,7 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
         });
       }
     } catch (e) {
-      print("Ralat mengambil nama staff: $e");
+      debugPrint("Ralat mengambil nama staff: $e");
     }
   }
 
@@ -439,7 +432,7 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
         });
       }
     } catch (e) {
-      print("Ralat mengambil data SLA: $e");
+      debugPrint("Ralat mengambil data SLA: $e");
     }
   }
 
@@ -538,67 +531,6 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
       _tampilMesej("Ralat Sambungan Laragon: $e");
     } finally {
       if (mounted) setState(() => _isSaving = false);
-    }
-  }
-
-  // =========================================================================
-  // VALIDASI: SUNTIK NAMA VALIDASI DYNAMIC SESSION USER
-  // =========================================================================
-  void _semakSyaratSebelumSimpanNormal() {
-    String targetStaff = _selectedAssignedEntityValue != null &&
-            !_selectedAssignedEntityValue.toString().startsWith("vendor")
-        ? _selectedAssignedEntityValue.toString()
-        : (_namaStaffLive.isNotEmpty ? _namaStaffLive : 'Help Desk Support');
-
-    String statusAsalDatabase =
-        (_ticketData['status'] ?? 'open').toString().toLowerCase().trim();
-    String statusBaruPilihan = (_selectedStatus ?? 'Open').toLowerCase().trim();
-
-    //  REASSIGN: Semak kalau ada perubahan Assignee (Staff/Vendor)
-    String assigneeAsalDatabase = (_selectedStaff ?? '').toString().trim();
-    String assigneeBaruPilihan =
-        (_selectedAssignedEntityValue ?? '').toString().trim();
-
-    bool adakahStatusBerubah = statusBaruPilihan != statusAsalDatabase;
-    bool adakahAssigneeBerubah = assigneeBaruPilihan != assigneeAsalDatabase;
-
-    if (adakahStatusBerubah || adakahAssigneeBerubah) {
-      Color warnaButangPopUp = AppColors.navy;
-
-      String tajukDialog = 'Status Update Reason';
-      String hintDialog =
-          'Enter status update note (e.g., Attending to site issue)...';
-
-      if (statusBaruPilihan == 'closed') {
-        warnaButangPopUp = Colors.green;
-        tajukDialog = 'Closing Resolution Note';
-        hintDialog =
-            'Enter resolution note (e.g., Issue fixed successfully)...';
-      } else if (adakahAssigneeBerubah) {
-        warnaButangPopUp = Colors.purple;
-        tajukDialog = 'Reassignment Reason';
-        hintDialog = 'Enter reason for reassigning this ticket...';
-      }
-
-      _pamerDialogRemarksPaksaan(
-          tajuk: tajukDialog,
-          hint: hintDialog,
-          warnaButang: warnaButangPopUp,
-          onConfirm: (textUlasan) {
-            _hantarKemasKiniStatusKePHP(
-              status: _selectedStatus!,
-              priority: _selectedPriority,
-              staff: targetStaff,
-              remarks: textUlasan,
-            );
-          });
-    } else {
-      _hantarKemasKiniStatusKePHP(
-        status: _selectedStatus ?? 'Open',
-        priority: _selectedPriority,
-        staff: targetStaff,
-        remarks: _remarksMessageController.text,
-      );
     }
   }
 
@@ -1045,8 +977,6 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
     String emailUser = _ticketData['submitter_email'] ?? 'No Email';
     String description = _ticketData['description'] ?? 'No description text.';
     String dateCreated = _ticketData['created_at'] ?? 'No Date';
-    bool isStatusInProgressLive =
-        (_selectedStatus?.toLowerCase().replaceAll(' ', '') == 'in_progress');
     return DefaultTabController(
       length: 3,
       child: Builder(
@@ -2012,7 +1942,10 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
                                                                   '')
                                                               .trim();
                                                         }
-                                                      } catch (e) {}
+                                                      } catch (e) {
+                                                        debugPrint(
+                                                            'Failed to parse responded-in time: $e');
+                                                      }
                                                     }
                                                     return masaDitemui;
                                                   })()} · ${(_ticketData['real_save_date_time'] ?? _lastUpdatedText).toString().trim()}",
@@ -2583,7 +2516,7 @@ class _TicketWorkspaceScreenState extends State<TicketWorkspaceScreen> {
                                                       }
                                                     }
                                                   } catch (e) {
-                                                    print(
+                                                    debugPrint(
                                                         "Ralat saringan dynamic vendor matching: $e");
                                                   }
                                                 }

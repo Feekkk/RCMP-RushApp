@@ -6,7 +6,6 @@ import 'dart:convert';
 import '../../theme/app_theme.dart';
 import '../../theme/admin_theme.dart';
 import '../../main.dart';
-import '../../services/notification_service.dart';
 import '../../services/auth_state.dart';
 import 'dart:async';
 
@@ -49,10 +48,7 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
 
   String _namaStaffLive = "";
 
-  List<String> _readTicketIdsListLive = [];
-
   Timer? _notifPollTimer; // POLLING TIMER!
-  String _lastKnownTopTicketId = ""; // Track last ticket
 
   // Standard colors assigned for 3 donut chart sections
   final List<Color> _chartColors = [
@@ -112,14 +108,14 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
         });
       } else {
         if (!isBackground) {
-          print(
+          debugPrint(
               "Failed to load staff dashboard data. Status: ${respon.statusCode}");
           setState(() => _isLoading = false);
         }
       }
     } catch (e) {
       if (!isBackground) {
-        print("Laragon connection error: $e");
+        debugPrint("Laragon connection error: $e");
         setState(() => _isLoading = false);
       }
     }
@@ -133,17 +129,6 @@ class _StaffDashboardScreenState extends State<StaffDashboardScreen> {
         return const Color(0xFFC9A227); // Teks emas amaran
       default:
         return const Color(0xFF2F5FA3); // Teks biru korporat untuk Open
-    }
-  }
-
-  Color _getStatusBg(String status) {
-    switch (status.toLowerCase().trim()) {
-      case 'closed':
-        return const Color(0xFFEAF7EE); // Hijau lembut untuk Closed!
-      case 'in_progress':
-        return const Color(0xFFFFF8E6); // Kuning amaran lembut
-      default:
-        return const Color(0xFFEAF1FB); // Biru lembut untuk Open
     }
   }
 

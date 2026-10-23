@@ -65,7 +65,7 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
         });
       }
     } catch (e) {
-      print("Error loading category pool: $e");
+      debugPrint("Error loading category pool: $e");
       setState(() => _isLoading = false);
     }
   }
@@ -94,8 +94,10 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> resData = json.decode(response.body);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(resData['mesej'] ?? 'Done')));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(resData['mesej'] ?? 'Done')));
+        }
 
         if (resData['status'] == 'berjaya') {
           _categoryNameController.clear(); // Clear the text input layout block
@@ -103,8 +105,10 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Connection error: $e")));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Connection error: $e")));
+      }
     } finally {
       if (mounted) setState(() => _isAdding = false);
     }

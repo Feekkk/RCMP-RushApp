@@ -84,7 +84,7 @@ class _AdminAllTicketsScreenState extends State<AdminAllTicketsScreen> {
         _tapisSenaraiTiketDinamik();
       }
     } catch (e) {
-      print("Error linking to admin tickets pool: $e");
+      debugPrint("Error linking to admin tickets pool: $e");
       setState(() => _isLoading = false);
     }
   }
@@ -107,11 +107,11 @@ class _AdminAllTicketsScreenState extends State<AdminAllTicketsScreen> {
         setState(() {
           _categoryOptions = ['All Categories', ...fetchedCats];
         });
-        print(
+        debugPrint(
             "DROPDOWN CATEGORIES LIVE SYNCED: ${_categoryOptions.length} items loaded for $currentLoggedInUserEmail");
       }
     } catch (e) {
-      print("Dropdown category pull fail: $e");
+      debugPrint("Dropdown category pull fail: $e");
     }
   }
 

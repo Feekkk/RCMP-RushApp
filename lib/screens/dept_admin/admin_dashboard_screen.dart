@@ -6,7 +6,6 @@ import 'dart:convert';
 import '../../theme/app_theme.dart';
 import '../../theme/admin_theme.dart';
 import '../../main.dart';
-import '../../services/notification_service.dart';
 import '../../services/auth_state.dart';
 import 'dart:async';
 
@@ -43,7 +42,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   List<dynamic> _incomingTickets = []; // Save incoming tickets list!
 
   Timer? _notifPollTimer; // 🕒 POLLING TIMER!
-  String _lastKnownTopTicketId = ""; // Track last ticket
 
   final ScrollController _scrollController = ScrollController();
   final List<GlobalKey> _sectionKeys = List.generate(4, (index) => GlobalKey());
@@ -107,6 +105,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
     try {
       final respon = await http.get(url);
+      if (!mounted) return;
       if (respon.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(respon.body);
 
@@ -149,28 +148,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       }
     } catch (e) {
       if (!isBackground) {
-        print("Ralat memuat data admin dashboard: $e");
+        debugPrint("Ralat memuat data admin dashboard: $e");
         setState(() => _isLoading = false);
       }
     }
-  }
-
-  String _getChartTitle() {
-    if (_selectedCardIndex == 0) return 'All Tickets Status Overview';
-    if (_selectedCardIndex == 1) return 'Open Tickets Priority Breakdown';
-    if (_selectedCardIndex == 2)
-      return 'Top Closed Complaints Frequency by Category';
-    return 'Customer Feedback Rating Distribution';
-  }
-
-  String _getChartSubtitle() {
-    if (_selectedCardIndex == 0)
-      return 'Real-time volume overview segmented by complaint status tracks.';
-    if (_selectedCardIndex == 1)
-      return 'Urgency assessment metrics for active open complaints.';
-    if (_selectedCardIndex == 2)
-      return 'Category tracks with the highest number of fully resolved tickets.';
-    return 'Total counts recorded for each feedback score star packet.';
   }
 
   @override
@@ -356,7 +337,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                               tkt['created_at'] ?? ''),
                                           DateTime.now());
                                       isBreached = mins > 480;
-                                    } catch (e) {}
+                                    } catch (e) {
+                                      debugPrint(
+                                          'Failed to compute SLA breach: $e');
+                                    }
 
                                     return _buildNotifItem(tkt, isBreached);
                                   },

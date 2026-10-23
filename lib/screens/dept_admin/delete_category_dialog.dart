@@ -54,13 +54,13 @@ class _DeleteCategoryDialogContentState
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(hasil['mesej'])));
           }
-        } else {
+        } else if (mounted) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(hasil['mesej'])));
         }
       }
     } catch (e) {
-      print("Ralat: $e");
+      debugPrint("Ralat: $e");
     } finally {
       if (mounted) setState(() => _isDeleting = false);
     }

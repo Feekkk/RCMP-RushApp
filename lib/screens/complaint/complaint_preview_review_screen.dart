@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../theme/app_theme.dart';
-import 'complaint_fill_details_screen.dart';
 
 /// Interface 6: "Submit a Complaint" — Step 2: Preview & Review.
 class ComplaintPreviewReviewScreen extends StatelessWidget {
@@ -151,7 +150,6 @@ class ComplaintPreviewReviewScreen extends StatelessWidget {
                       label: 'Next: Review All',
                       icon: Icons.arrow_forward,
                       onPressed: () {
-                        bool isAddAnother = dataAduan['isAddAnother'] ?? false;
                         List<dynamic> existingList =
                             dataAduan['existing_list'] ?? [];
 

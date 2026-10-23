@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../theme/app_theme.dart';
-import '../../theme/admin_theme.dart';
 
 /// "Ticket Detail" — user-facing view of a single ticket, including a "Rate your experience" feedback panel.class TicketDetailUserScreen extends StatefulWidget {
 class TicketDetailUserScreen extends StatefulWidget {
@@ -41,7 +40,6 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
   Map<String, dynamic>? _feedbackDataLive; // Get existing feedback
 
   Map<String, dynamic> _ticketData = {};
-  bool _isDataLoadedLive = false;
 // =========================================================================
 //  FETCH TICKET ACTIVITY HISTORY DURING INITSTATE!
 // =========================================================================
@@ -87,11 +85,11 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
         setState(() {
           _ticketLogs = dataDiterima;
         });
-        print(
+        debugPrint(
             "USER TIMELINE HISTORY SUCCESSFULLY FETCHED: ${dataDiterima.length} logs for ticket $idTiket");
       }
     } catch (e) {
-      print("Error fetching user view ticket activity history: $e");
+      debugPrint("Error fetching user view ticket activity history: $e");
     }
   }
 
@@ -117,11 +115,11 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
           });
         }
 
-        print(
+        debugPrint(
             "COMPLAINTS RECORDS REFRESHED FROM PHP LIST: Handled By = ${_ticketData['remarks']}");
       }
     } catch (e) {
-      print("Fatal error fetching refreshed complaints data: $e");
+      debugPrint("Fatal error fetching refreshed complaints data: $e");
     }
   }
 
@@ -147,7 +145,7 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
         }
       }
     } catch (e) {
-      print("Error checking feedback: $e");
+      debugPrint("Error checking feedback: $e");
     }
   }
 
@@ -180,7 +178,9 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
         ];
         String blnTeks = listBln[int.parse(blnNum) - 1];
         dateStr = "$tgl $blnTeks $thn, $jamMnt";
-      } catch (e) {}
+      } catch (e) {
+        debugPrint('Failed to format ticket date: $e');
+      }
     }
 
     return Container(
@@ -311,8 +311,10 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Ralat penghantaran: $e")));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Ralat penghantaran: $e")));
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -642,8 +644,6 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
 // =========================================================================
   Widget _buildMessagesTimelinePanelLive(
       Map<String, dynamic> ticketData, String staffName) {
-    String statusLive =
-        (ticketData['status'] ?? 'open').toString().toLowerCase();
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -759,50 +759,6 @@ class _TicketDetailUserScreenState extends State<TicketDetailUserScreen> {
                   fontStyle: FontStyle.italic),
             ),
           )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSystemStatusBubbleLine(String text, String time, bool isClosed) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color:
-                  isClosed ? const Color(0xFFEAF7EE) : const Color(0xFFEAF1FB),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: isClosed
-                      ? const Color(0xFF2E9E52).withOpacity(0.2)
-                      : const Color(0xFF2F5FA3).withOpacity(0.1)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isClosed
-                            ? const Color(0xFF2E9E52)
-                            : const Color(0xFF0F52BA))),
-                const SizedBox(width: 8),
-                Text(text,
-                    style: const TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary)),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(time, style: const TextStyle(fontSize: 10, color: Colors.grey)),
         ],
       ),
     );

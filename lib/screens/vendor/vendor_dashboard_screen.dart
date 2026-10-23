@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'profile_setup_dialog.dart';
 import '../../theme/app_theme.dart';
 import 'company_staff_screen.dart';
-import '../../services/notification_service.dart'; // notification
 import '../../services/auth_state.dart';
 import 'dart:async'; // Timer
 
@@ -35,7 +34,6 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
   String _statusKadDipilihLive = 'ALL';
 
   Timer? _notifPollTimer; // 🕒 POLLING TIMER!
-  String _lastKnownTopTicketId = ""; // Track last ticket
 
   @override
   void initState() {
@@ -70,14 +68,14 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
           _isLoading = false;
         });
 
-        print("DASHBOARD DETECT LIVE STATUS: $rawFirstLogin");
+        debugPrint("DASHBOARD DETECT LIVE STATUS: $rawFirstLogin");
 
         _tarikTiketVendorLive();
 
         // RIGID FORMULA: Check using toString() for error resistance!
         if (rawFirstLogin.toString() == '1') {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            print("TRIGGERING PROFILE SETUP DIALOG...");
+            debugPrint("TRIGGERING PROFILE SETUP DIALOG...");
             showProfileSetupDialog(
               context: context,
               vendorData: _vendorData,
@@ -141,7 +139,7 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
       }
     } catch (e) {
       if (!isBackground) {
-        print("Ralat sedut tiket vendor live: $e");
+        debugPrint("Ralat sedut tiket vendor live: $e");
         setState(() => _isTicketsLoading = false);
       }
     }
@@ -161,7 +159,9 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
         int mins = _kiraMinitBekerjaSLA(createdTime, DateTime.now());
         isBreached = mins > 300; // Vendor deadline typically 5 hours (300 mins)
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint('Failed to compute SLA breach: $e');
+    }
 
     return InkWell(
       onTap: () {
@@ -290,7 +290,7 @@ class _VendorDashboardScreenState extends State<VendorDashboardScreen> {
         return matchSearch && matchCard;
       }).toList();
     });
-    print(
+    debugPrint(
         "FILTER STATE SYNCED: Card [$_statusKadDipilihLive] | Search keyword: '$teksCarian'");
   }
 

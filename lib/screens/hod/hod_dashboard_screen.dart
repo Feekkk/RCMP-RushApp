@@ -105,27 +105,9 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
         });
       }
     } catch (e) {
-      print("Error loading admin dashboard data: $e");
+      debugPrint("Error loading admin dashboard data: $e");
       setState(() => _isLoading = false);
     }
-  }
-
-  String _getChartTitle() {
-    if (_selectedCardIndex == 0) return 'All Tickets Status Overview';
-    if (_selectedCardIndex == 1) return 'Open Tickets Priority Breakdown';
-    if (_selectedCardIndex == 2)
-      return 'Top Closed Complaints Frequency by Category';
-    return 'Customer Feedback Rating Distribution';
-  }
-
-  String _getChartSubtitle() {
-    if (_selectedCardIndex == 0)
-      return 'Real-time volume overview segmented by complaint status tracks.';
-    if (_selectedCardIndex == 1)
-      return 'Urgency assessment metrics for active open complaints.';
-    if (_selectedCardIndex == 2)
-      return 'Category tracks with the highest number of fully resolved tickets.';
-    return 'Total counts recorded for each feedback score star packet.';
   }
 
   @override
@@ -832,43 +814,6 @@ class _HodDashboardScreenState extends State<HodDashboardScreen> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _QuickLink extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  const _QuickLink(
-      {required this.icon, required this.label, required this.onTap});
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.border)),
-        child: Row(
-          children: [
-            Icon(icon, size: 18, color: AppColors.navy),
-            const SizedBox(width: 12),
-            Expanded(
-                child: Text(label,
-                    style: const TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary))),
-            const Icon(Icons.chevron_right,
-                size: 18, color: AppColors.textMuted),
-          ],
-        ),
-      ),
     );
   }
 }

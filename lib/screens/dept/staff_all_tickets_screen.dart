@@ -69,11 +69,11 @@ class _StaffAllTicketsScreenState extends State<StaffAllTicketsScreen> {
           _isLoading = false;
         });
       } else {
-        print("Failed to load all tickets. Status: ${respon.statusCode}");
+        debugPrint("Failed to load all tickets. Status: ${respon.statusCode}");
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print("Laragon connection error: $e");
+      debugPrint("Laragon connection error: $e");
       setState(() => _isLoading = false);
     }
   }

@@ -20,8 +20,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<dynamic> _senaraiAduanSaya = [];
   bool _isLoading = true;
 
-  List<String> _readUserNotificationIdsList = [];
-
   @override
   void initState() {
     super.initState();
@@ -31,7 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // Fungsi memanggil API Laragon
   Future<void> _tarikDataAduanDashboard() async {
     if (currentLoggedInUserEmail == null || currentLoggedInUserEmail!.isEmpty) {
-      print("Amaran: Tiada emel aktif di dalam session main.dart!");
+      debugPrint("Amaran: Tiada emel aktif di dalam session main.dart!");
       return;
     }
 
@@ -51,11 +49,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _isLoading = false;
         });
       } else {
-        print("Gagal muat data dashboard. Status: ${respon.statusCode}");
+        debugPrint("Gagal muat data dashboard. Status: ${respon.statusCode}");
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print("Ralat sambungan ke Laragon: $e");
+      debugPrint("Ralat sambungan ke Laragon: $e");
       setState(() => _isLoading = false);
     }
   }
@@ -234,10 +232,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             'closed'
                                                         ? '✅'
                                                         : '📩');
-                                            bool adakahTiketIniBreachedSlaLive =
-                                                statusLabelReal
-                                                    .contains('breach');
-
                                             return InkWell(
                                               borderRadius:
                                                   BorderRadius.circular(12),

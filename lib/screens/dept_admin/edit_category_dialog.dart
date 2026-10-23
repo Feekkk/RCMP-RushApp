@@ -75,7 +75,7 @@ class _EditCategoryDialogContentState
         }
       }
     } catch (e) {
-      print("Ralat: $e");
+      debugPrint("Ralat: $e");
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

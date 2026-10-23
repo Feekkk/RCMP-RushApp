@@ -43,7 +43,7 @@ class _CompanyStaffScreenState extends State<CompanyStaffScreen> {
         }
       }
     } catch (e) {
-      print("Ralat tarik staff: $e");
+      debugPrint("Ralat tarik staff: $e");
       if (mounted) setState(() => _isDataLoading = false);
     }
   }
@@ -116,13 +116,15 @@ class _CompanyStaffScreenState extends State<CompanyStaffScreen> {
     try {
       final respon = await http.get(url);
       if (respon.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text('Crew member deleted successfully ! ')));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text('Crew member deleted successfully ! ')));
+        }
         _tarikSenaraiStaffDariDatabase(); // Auto-refresh data live !
       }
     } catch (e) {
-      print("Ralat delete staff: $e");
+      debugPrint("Ralat delete staff: $e");
     }
   }
 
@@ -184,12 +186,15 @@ class _CompanyStaffScreenState extends State<CompanyStaffScreen> {
                         "position": positionCtrl.text.trim(),
                         "phone": phoneCtrl.text.trim()
                       }));
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      backgroundColor: Colors.green,
-                      content: Text('New sub-staff crew successfully added.')));
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        backgroundColor: Colors.green,
+                        content:
+                            Text('New sub-staff crew successfully added.')));
+                  }
                   _tarikSenaraiStaffDariDatabase();
                 } catch (e) {
-                  print(e);
+                  debugPrint('Failed to add staff: $e');
                 }
               },
               child: const Text('Save Crew'),
@@ -258,13 +263,15 @@ class _CompanyStaffScreenState extends State<CompanyStaffScreen> {
                         "position": positionCtrl.text.trim(),
                         "phone": phoneCtrl.text.trim()
                       }));
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      backgroundColor: Colors.green,
-                      content:
-                          Text('Staff deployment data successfully updated.')));
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        backgroundColor: Colors.green,
+                        content: Text(
+                            'Staff deployment data successfully updated.')));
+                  }
                   _tarikSenaraiStaffDariDatabase();
                 } catch (e) {
-                  print(e);
+                  debugPrint('Failed to update staff: $e');
                 }
               },
               child: const Text('Update Changes'),

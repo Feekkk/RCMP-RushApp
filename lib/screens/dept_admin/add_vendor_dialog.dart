@@ -116,13 +116,13 @@ class _AddVendorDialogState extends State<AddVendorDialog> {
               ),
             );
           }
-        } else {
+        } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(hasil['mesej'] ?? 'Failed.')));
         }
       }
     } catch (e) {
-      print("Ralat penambahan vendor: $e");
+      debugPrint("Ralat penambahan vendor: $e");
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

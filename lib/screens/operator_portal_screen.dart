@@ -7,6 +7,7 @@ import 'dart:convert'; //  json.decode
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../services/auth_state.dart';
+import '../dev/dev_auth.dart';
 import '../../main.dart';
 
 /// Interface 4: "Help Desk Portal — Operator Sign In" screen.
@@ -22,6 +23,7 @@ class OperatorPortalScreen extends StatefulWidget {
 class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
   bool _showOtherOptions = false;
   bool _isLoading = false;
+  UserRole _devRole = UserRole.staff; // DEV ONLY, see kDevAuthBypass
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -191,15 +193,15 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
         };
 
         if (userRole == 'admin') {
-          print("Akaun Admin Dikesan! Meluncur ke Admin Dashboard...");
+          debugPrint("Akaun Admin Dikesan! Meluncur ke Admin Dashboard...");
           context.pushReplacement('/admin/dashboard',
               extra: navigationArgs);
         } else if (userRole == 'hod') {
-          print("Akaun HOD Dikesan! Meluncur ke HOD Dashboard...");
+          debugPrint("Akaun HOD Dikesan! Meluncur ke HOD Dashboard...");
           context.pushReplacement('/hod/dashboard',
               extra: navigationArgs);
         } else {
-          print("Akaun Staff Biasa Dikesan! Meluncur ke Staff Dashboard...");
+          debugPrint("Akaun Staff Biasa Dikesan! Meluncur ke Staff Dashboard...");
           context.pushReplacement('/staff/dashboard',
               extra: navigationArgs);
         }
@@ -207,7 +209,7 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
         _tampilMesej("Ralat pelayan: Status ${response.statusCode}");
       }
     } catch (e) {
-      print("Ralat ketika menyiasat suis peranan: $e");
+      debugPrint("Ralat ketika menyiasat suis peranan: $e");
       _tampilMesej("Ralat Sambungan: Pastikan Laragon aktif. ($e)");
     }
   }
@@ -300,20 +302,36 @@ class _OperatorPortalScreenState extends State<OperatorPortalScreen> {
                   ),
                 ),
                 const SizedBox(height: 22),
+                if (kDevAuthBypass) ...[
+                  DevRoleSwitcher(
+                    selected: _devRole,
+                    onChanged: (role) => setState(() => _devRole = role),
+                    roles: const [
+                      UserRole.staff,
+                      UserRole.admin,
+                      UserRole.hod,
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 _isLoading
                     ? const CircularProgressIndicator()
                     : Column(
                         children: [
                           MicrosoftButton(
-                            onPressed: () {
-                              _prosesSemakPerananDanMasuk();
-                            },
+                            onPressed: kDevAuthBypass
+                                ? () => devLogin(context, _devRole)
+                                : () {
+                                    _prosesSemakPerananDanMasuk();
+                                  },
                           ),
                           const SizedBox(height: 10),
                           MicrosoftButton(
-                            onPressed: () async {
-                              await _handleRealSSOLogin();
-                            },
+                            onPressed: kDevAuthBypass
+                                ? () => devLogin(context, _devRole)
+                                : () async {
+                                    await _handleRealSSOLogin();
+                                  },
                           ),
                         ],
                       ),

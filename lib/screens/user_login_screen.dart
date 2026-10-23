@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../services/auth_state.dart';
+import '../dev/dev_auth.dart';
 
 /// Interface 3: "Help Desk System — Welcome Back / User Login" screen.
 class UserLoginScreen extends StatefulWidget {
@@ -19,72 +20,7 @@ class UserLoginScreen extends StatefulWidget {
 
 class _UserLoginScreenState extends State<UserLoginScreen> {
   bool _isLoading = false;
-
-  // Fungsi simulasi SSO: Tarik data
-  Future<void> _loginDanTarikDataAutomatik() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Menggunakan email contoh
-    const String emelSimulasi = "syafiqahsyaza@gmail.com";
-
-    final String domain = kIsWeb ? 'localhost' : '10.103.19.67';
-    final url = Uri.parse(
-        'http://$domain/helpdesk_api/get_user.php?email=$emelSimulasi');
-
-    try {
-      final respon = await http.get(url);
-
-      if (respon.statusCode == 200) {
-        final Map<String, dynamic> hasil = json.decode(respon.body);
-
-        if (hasil['status'] == 'wujud') {
-          // Mengambil data mengikut nama ruangan jadual staff anda
-          String namaDariDB = hasil['data']['full_name'];
-          String emelDariDB = hasil['data']['email'];
-
-          if (mounted) {
-            // 1. get nama jabatan dari skrin depan
-            final Object? argsTargetDept =
-                ModalRoute.of(context)?.settings.arguments;
-            String targetDept = (widget.department ?? argsTargetDept ?? 'IT')
-                .toString()
-                .trim()
-                .toLowerCase();
-
-            // 2.  terus kekalkan masuk ke fail  /complaint/fill
-            await AuthState.instance.login(
-              role: UserRole.student,
-              email: emelDariDB,
-              fullName: namaDariDB,
-            );
-            if (!mounted) return;
-            context.pushReplacement('/complaint/fill',
-              extra: {
-                'nama_user': namaDariDB,
-                'emel_user': emelDariDB,
-                'selected_dept':
-                    targetDept, //   jenis jabatan ke dalam arguments!
-              },
-            );
-          }
-        } else {
-          _tampilMesej(hasil['mesej'] ?? "Pengguna tiada dalam database.");
-        }
-      } else {
-        _tampilMesej("Ralat Pelayan: Status ${respon.statusCode}");
-      }
-    } catch (e) {
-      _tampilMesej("Ralat Sambungan Laragon. Pastikan Laragon aktif.");
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
+  UserRole _devRole = UserRole.student; // DEV ONLY, see kDevAuthBypass
 
   // LANGKAH 1: BACA CREDENTIAL SECARA DINAMIK DARI .ENV BACKEND (PHP)
   Future<void> _handleRealSSOLogin() async {
@@ -250,21 +186,23 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                       style: AppTextStyles.cardSubtitle,
                     ),
                     const SizedBox(height: 24),
+                    if (kDevAuthBypass) ...[
+                      DevRoleSwitcher(
+                        selected: _devRole,
+                        onChanged: (role) => setState(() => _devRole = role),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     _isLoading
                         ? const CircularProgressIndicator()
-                        : Column(
-                            children: [
-                              MicrosoftButton(
-                                onPressed: _loginDanTarikDataAutomatik,
-                              ),
-                              const SizedBox(height: 12),
-                              RealSSOButton(
-                                onPressed: () async {
-                                  //  SSO !
-                                  await _handleRealSSOLogin();
-                                },
-                              ),
-                            ],
+                        : MicrosoftButton(
+                            onPressed: kDevAuthBypass
+                                ? () => devLogin(context, _devRole,
+                                    department: widget.department)
+                                : () async {
+                                    //  SSO !
+                                    await _handleRealSSOLogin();
+                                  },
                           ),
                     const SizedBox(height: 16),
                     TextButton.icon(

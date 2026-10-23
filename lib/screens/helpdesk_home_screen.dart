@@ -88,21 +88,24 @@ class HelpdeskHomeScreen extends StatelessWidget {
                         _DepartmentTile(
                           icon: Icons.computer,
                           label: 'IT',
-                          onTap: () => context.push('/login',
+                          onTap: () => context.push(
+                            '/login',
                             extra: 'IT',
                           ),
                         ),
                         _DepartmentTile(
                           icon: Icons.apartment,
                           label: 'ADMINISTRATION\n& FACILITIES',
-                          onTap: () => context.push('/login',
+                          onTap: () => context.push(
+                            '/login',
                             extra: 'Administration & Facilities',
                           ),
                         ),
                         _DepartmentTile(
                           icon: Icons.build_outlined,
                           label: 'MAINTENANCE',
-                          onTap: () => context.push('/login',
+                          onTap: () => context.push(
+                            '/login',
                             extra: 'Maintenance',
                           ),
                         ),
@@ -170,7 +173,7 @@ class _DepartmentTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 130,
-        height: 100,
+        height: 116,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -209,31 +212,68 @@ class _DepartmentTile extends StatelessWidget {
 class _BottomStatusBar extends StatelessWidget {
   const _BottomStatusBar();
 
+  static const _items = [
+    (Icons.access_time, 'Mon - Sun · 8am - 5pm'),
+    (Icons.call_outlined, 'Ext. 142 / 140'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       color: AppColors.navyDark,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: Wrap(
-        spacing: 20,
-        runSpacing: 10,
-        crossAxisAlignment: WrapCrossAlignment.center,
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      child: Column(
         children: [
-          _buildStatusItem(Icons.access_time, 'Mon - Sun · 8am - 5pm'),
-          _buildStatusItem(Icons.call_outlined, 'Ext. 142 / 140'),
-          _buildStatusItem(
-              Icons.list_alt_outlined, 'Real-time Ticket Tracking'),
-          const Text(
-            '© 2025 UniKL RCMP · RUSH  |  User Manual',
-            style: TextStyle(color: Colors.white38, fontSize: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (var i = 0; i < _items.length; i++) ...[
+                if (i > 0) const SizedBox(width: 24),
+                _buildStatusItem(_items[i].$1, _items[i].$2),
+              ],
+            ],
+          ),
+          const SizedBox(height: 14),
+          Divider(color: Colors.white.withValues(alpha: 0.12), height: 1),
+          const SizedBox(height: 10),
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              const Text(
+                '© 2025 UniKL RCMP · RUSH',
+                style: TextStyle(color: Colors.white38, fontSize: 10),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                width: 3,
+                height: 3,
+                margin: const EdgeInsets.only(bottom: 1),
+                decoration: const BoxDecoration(
+                  color: Colors.white24,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'User Manual',
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.6),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Colors.white.withValues(alpha: 0.3),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatusItem(IconData icon, String label) {
+  static Widget _buildStatusItem(IconData icon, String label) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

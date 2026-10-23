@@ -42,10 +42,6 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
   bool _isLoadingVendors = true;
   final TextEditingController _vendorSearchController = TextEditingController();
   String _selectedStatusFilter = 'All';
-  int _countAll = 0;
-  int _countPending = 0;
-  int _countActive = 0;
-  int _countSuspended = 0;
 
   String _namaJabatanLive = "Loading Department...";
 
@@ -86,7 +82,7 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
         }
       }
     } catch (e) {
-      print("Ralat staff: $e");
+      debugPrint("Ralat staff: $e");
       if (mounted) setState(() => _isLoadingStaff = false);
     }
   }
@@ -105,22 +101,13 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
             _senaraiSemuaVendors = dataDiterima;
             _senaraiVendorsDipaparkan = dataDiterima;
             senaraiVendorGlobalJabatanSyafiqah = List.from(dataDiterima);
-            _countAll = dataDiterima.length;
-            _countPending =
-                dataDiterima.where((v) => v['status'] == 'pending').length;
-            _countActive = dataDiterima
-                .where(
-                    (v) => v['status'] == 'active' || v['status'] == 'approved')
-                .length;
-            _countSuspended =
-                dataDiterima.where((v) => v['status'] == 'suspended').length;
             _isLoadingVendors = false;
           });
           _jalankanTapisanVendor();
         }
       }
     } catch (e) {
-      print("Ralat vendor: $e");
+      debugPrint("Ralat vendor: $e");
       if (mounted) setState(() => _isLoadingVendors = false);
     }
   }
@@ -213,12 +200,14 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
             "pic_phone": pPhn
           }));
       if (respon.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Vendor updated successfully!')));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Vendor updated successfully!')));
+        }
         _tarikDataVendors();
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
@@ -229,12 +218,14 @@ class _AdminManageUsersScreenState extends State<AdminManageUsersScreen> {
     try {
       final respon = await http.get(url);
       if (respon.statusCode == 200) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('$nama removed.')));
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('$nama removed.')));
+        }
         _tarikDataVendors();
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
